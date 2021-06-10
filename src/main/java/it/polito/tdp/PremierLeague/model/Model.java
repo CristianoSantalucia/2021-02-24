@@ -97,4 +97,11 @@ public class Model
 		}
 		return "\nGIOCATORE MIGLIORE: " + besta.getName() + " ( " + best + " )" ; 
 	}
+	
+	///simulazione 
+	
+	public void simula (int N)
+	{
+		List<Evento> eventi = new ArrayList<>(); 
+	}
 }
