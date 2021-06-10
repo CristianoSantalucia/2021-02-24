@@ -1,7 +1,10 @@
 package it.polito.tdp.PremierLeague.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +19,9 @@ import it.polito.tdp.PremierLeague.db.PremierLeagueDAO;
 public class Model
 {
 	private PremierLeagueDAO dao;
-	private Map<Integer, Player> idMap; 
+	private Map<Integer, Player> giocatori; 
 	private Graph<Player, DefaultWeightedEdge> grafo; 
+	private List<Team> teams;
 	
 	public Model()
 	{
@@ -31,23 +35,30 @@ public class Model
 	public void creaGrafo(Match m)
 	{
 		// ripulisco mappa e grafo
-		this.idMap = new HashMap<>(); 
+		this.giocatori = new HashMap<>(); 
 		this.grafo = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class); 
 		
 		/// vertici 
-		this.dao.getVertici(idMap, m);  
-		Graphs.addAllVertices(this.grafo, this.idMap.values()); 
+		this.dao.getVertici(giocatori, m);  
+		Graphs.addAllVertices(this.grafo, this.giocatori.values()); 
 		
 		/// archi
-//		List<Adiacenza> adiacenze = new ArrayList<>(this.dao.getAdiacenze());
-//		for (Adiacenza a : adiacenze)
-//		{
-//			//recupero gli Oggetti dalla chiave della mappa e faccio controlli
-//			Object n1 = this.idMap.get(a.getNodo1());
-//			Object n2 = this.idMap.get(a.getNodo2());
-//			if (n1 != null && n2 != null)
-//				Graphs.addEdge(this.grafo, n1, n2, a.getPeso());
-//		}
+		this.teams = new ArrayList<>(); 
+		this.dao.getGiocatoriInTeam(teams, giocatori, m);
+		Team t1 = this.teams.get(0); 
+		Team t2 = this.teams.get(1);
+		
+		for (Player	p1 : t1.getGiocatori())
+		{
+			for (Player p2 : t2.getGiocatori())
+			{
+				double diff = p1.getEfficienza()-p2.getEfficienza();
+				if(diff > 0)
+					Graphs.addEdge(this.grafo, p1, p2, Math.abs(diff));
+				else if(diff < 0)
+					Graphs.addEdge(this.grafo, p2, p1, Math.abs(diff));
+			}
+		}
 	}
 	public int getNumVertici()
 	{
@@ -65,5 +76,25 @@ public class Model
 	{
 		return this.grafo.edgeSet();
 	}
-
+	public String getMigliore()
+	{
+		double entranti = 0; 
+		double uscenti = 0; 
+		double best = 0; 
+		Player besta = null; 
+		for(Player p : this.grafo.vertexSet())
+		{
+			for (DefaultWeightedEdge e : this.grafo.outgoingEdgesOf(p))
+				uscenti += this.grafo.getEdgeWeight(e);
+			for (DefaultWeightedEdge e : this.grafo.incomingEdgesOf(p))
+				entranti += this.grafo.getEdgeWeight(e);
+			double diff = Math.abs(uscenti-entranti);
+			if(diff > best)
+			{
+				best = diff; 
+				besta = p; 
+			}
+		}
+		return "\nGIOCATORE MIGLIORE: " + besta.getName() + " ( " + best + " )" ; 
+	}
 }

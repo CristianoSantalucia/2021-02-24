@@ -47,7 +47,8 @@ public class FXMLController
 			Match match = this.cmbMatch.getValue();
 			this.model.creaGrafo(match);
 
-			txtResult.appendText(String.format("GRAFO CREATO CON:\n#Vertici: %d\n#Archi: %d",
+			txtResult.clear();
+			txtResult.appendText(String.format("\nGRAFO CREATO CON:\n#Vertici: %d\n#Archi: %d",
 					model.getNumVertici(),
 					model.getNumArchi()));
 		}
@@ -59,7 +60,7 @@ public class FXMLController
 
 	@FXML void doGiocatoreMigliore(ActionEvent event)
 	{
-
+		txtResult.appendText(this.model.getMigliore()); 
 	}
 
 	@FXML void doSimula(ActionEvent event)

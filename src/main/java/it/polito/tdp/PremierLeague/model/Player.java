@@ -4,7 +4,7 @@ public class Player
 {
 	private Integer playerID;
 	private String name;
-	private int efficienza; 
+	private double efficienza; 
 
 	@Override public String toString()
 	{
@@ -31,7 +31,7 @@ public class Player
 		this.name = name;
 	}
 
-	public int getEfficienza()
+	public double getEfficienza()
 	{
 		return efficienza;
 	}
@@ -41,9 +41,8 @@ public class Player
 		this.efficienza = efficienza;
 	}
 
-	public Player(Integer playerID, String name, int efficienza)
+	public Player(Integer playerID, String name, double efficienza)
 	{
-		super();
 		this.playerID = playerID;
 		this.name = name;
 		this.efficienza = efficienza;
