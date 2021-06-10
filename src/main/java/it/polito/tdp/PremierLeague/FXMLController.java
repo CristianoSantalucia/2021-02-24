@@ -51,6 +51,10 @@ public class FXMLController
 			txtResult.appendText(String.format("\nGRAFO CREATO CON:\n#Vertici: %d\n#Archi: %d",
 					model.getNumVertici(),
 					model.getNumArchi()));
+			
+			this.btnGiocatoreMigliore.setDisable(false);
+			this.btnSimula.setDisable(false);
+			this.txtN.setDisable(false);
 		}
 		catch (Exception e)
 		{
@@ -60,7 +64,7 @@ public class FXMLController
 
 	@FXML void doGiocatoreMigliore(ActionEvent event)
 	{
-		txtResult.appendText(this.model.getMigliore()); 
+		txtResult.appendText("\n" + this.model.getMigliore()); 
 	}
 
 	@FXML void doSimula(ActionEvent event)
